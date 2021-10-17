@@ -1,7 +1,7 @@
 ## Min-cut
 
 ```@autodocs
-Modules = [LightGraphsFlows]
+Modules = [GraphsFlows]
 Pages = ["mincut.jl"]
 Order = [:function, :type]
 ```

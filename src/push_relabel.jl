@@ -9,13 +9,13 @@ Takes approximately ``\\mathcal{O}(|V|^{3})`` time.
 """
 function push_relabel end
 @traitfn function push_relabel(
-        residual_graph::::lg.IsDirected,       # the input graph
+        residual_graph::::Graphs.IsDirected,       # the input graph
         source::Integer,                       # the source vertex
         target::Integer,                       # the target vertex
         capacity_matrix::AbstractMatrix{T}     # edge flow capacities
     ) where {T}
 
-    n = lg.nv(residual_graph)
+    n = Graphs.nv(residual_graph)
     flow_matrix = spzeros(T, n, n)
 
     height = zeros(Int, n)
@@ -36,7 +36,7 @@ function push_relabel end
     sizehint!(Q, n)
 
 
-    for v in lg.outneighbors(residual_graph, source)
+    for v in Graphs.outneighbors(residual_graph, source)
         push_flow!(residual_graph, source, v, capacity_matrix, flow_matrix, excess, height, active, Q)
     end
 
@@ -46,7 +46,7 @@ function push_relabel end
         discharge!(residual_graph, v, capacity_matrix, flow_matrix, excess, height, active, count, Q)
     end
 
-    return sum([flow_matrix[v, target] for v in lg.inneighbors(residual_graph, target)]), flow_matrix
+    return sum([flow_matrix[v, target] for v in Graphs.inneighbors(residual_graph, target)]), flow_matrix
 end
 
 """
@@ -77,7 +77,7 @@ matrix, and `excess`, `height, `active`, and `Q` vectors.
 """
 function push_flow! end
 @traitfn function push_flow!(
-        residual_graph::::lg.IsDirected,   # the input graph
+        residual_graph::::Graphs.IsDirected,   # the input graph
         u::Integer,                        # input from-vertex
         v::Integer,                        # input to-vetex
         capacity_matrix::AbstractMatrix,
@@ -120,7 +120,7 @@ Requires arguments:
 """
 function gap! end
 @traitfn function gap!(
-        residual_graph::::lg.IsDirected,       # the input graph
+        residual_graph::::Graphs.IsDirected,       # the input graph
         h::Int,                                # cutoff height
         excess::AbstractVector,
         height::AbstractVector{Int},
@@ -128,8 +128,8 @@ function gap! end
         count::AbstractVector{Int},
         Q::AbstractVector                      # FIFO queue
     )
-    n = lg.nv(residual_graph)
-    for v in lg.vertices(residual_graph)
+    n = Graphs.nv(residual_graph)
+    for v in Graphs.vertices(residual_graph)
         height[v] < h && continue
         count[height[v] + 1] -= 1
         height[v] = max(height[v], n + 1)
@@ -146,7 +146,7 @@ Relabel a node `v` with respect to its neighbors to produce an admissable edge.
 """
 function relabel! end
 @traitfn function relabel!(
-        residual_graph::::lg.IsDirected,   # the input graph
+        residual_graph::::Graphs.IsDirected,   # the input graph
         v::Integer,                        # input vertex to be relabeled
         capacity_matrix::AbstractMatrix,
         flow_matrix::AbstractMatrix,
@@ -156,10 +156,10 @@ function relabel! end
         count::AbstractVector{Int},
         Q::AbstractVector
     )
-    n = lg.nv(residual_graph)
+    n = Graphs.nv(residual_graph)
     count[height[v] + 1] -= 1
     height[v] = 2 * n
-    for to in lg.outneighbors(residual_graph, v)
+    for to in Graphs.outneighbors(residual_graph, v)
         if capacity_matrix[v, to] > flow_matrix[v, to]
             height[v] = min(height[v], height[to] + 1)
         end
@@ -178,7 +178,7 @@ vertex if the excess remains non-zero.
 """
 function discharge! end
 @traitfn function discharge!(
-        residual_graph::::lg.IsDirected,    # the input graph
+        residual_graph::::Graphs.IsDirected,    # the input graph
         v::Integer,                         # vertex to be discharged
         capacity_matrix::AbstractMatrix,
         flow_matrix::AbstractMatrix,
@@ -188,7 +188,7 @@ function discharge! end
         count::AbstractVector{Int},
         Q::AbstractVector                   # FIFO queue
     )
-    for to in lg.outneighbors(residual_graph, v)
+    for to in Graphs.outneighbors(residual_graph, v)
         excess[v] == 0 && break
         push_flow!(residual_graph, v, to, capacity_matrix, flow_matrix, excess, height, active, Q)
     end

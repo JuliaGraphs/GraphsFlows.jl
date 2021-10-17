@@ -8,12 +8,12 @@ Return the value of the maximum flow as well as the final flow matrix.
 """
 function edmonds_karp_impl end
 @traitfn function edmonds_karp_impl(
-        residual_graph::::lg.IsDirected,               # the input graph
+        residual_graph::::Graphs.IsDirected,               # the input graph
         source::Integer,                       # the source vertex
         target::Integer,                       # the target vertex
         capacity_matrix::AbstractMatrix{T}    # edge flow capacities
     ) where {T}
-    n = lg.nv(residual_graph)                     # number of vertexes
+    n = Graphs.nv(residual_graph)                     # number of vertexes
     flow = 0
     flow_matrix = zeros(T, n, n)           # initialize flow matrix
     P = zeros(Int, n)
@@ -85,7 +85,7 @@ vector `S`.
 """
 function fetch_path! end
 @traitfn function fetch_path!(
-    residual_graph::::lg.IsDirected,               # the input graph
+    residual_graph::::Graphs.IsDirected,               # the input graph
     source::Integer,                       # the source vertex
     target::Integer,                       # the target vertex
     flow_matrix::AbstractMatrix,       # the current flow matrix
@@ -93,7 +93,7 @@ function fetch_path! end
     P::Vector{Int},                        # parent table of path init to -1s
     S::Vector{Int}                         # successor table of path init to -1s
     )
-    n = lg.nv(residual_graph)
+    n = Graphs.nv(residual_graph)
 
     P[source] = -2
     S[target] = -2
@@ -107,7 +107,7 @@ function fetch_path! end
     while true
         if length(Q_f) <= length(Q_r)
             u = pop!(Q_f)
-            for v in lg.outneighbors(residual_graph, u)
+            for v in Graphs.outneighbors(residual_graph, u)
                 if capacity_matrix[u, v] - flow_matrix[u, v] > 0 && P[v] == -1
                     P[v] = u
                     if S[v] == -1
@@ -121,7 +121,7 @@ function fetch_path! end
             length(Q_f) == 0 && return 0, P, S, 1 # No paths to target
         else
             v = pop!(Q_r)
-            for u in lg.inneighbors(residual_graph, v)
+            for u in Graphs.inneighbors(residual_graph, v)
                 if capacity_matrix[u, v] - flow_matrix[u, v] > 0 && S[u] == -1
                     S[u] = v
                     P[u] != -1 && return u, P, S, 0 # 0 indicates success
@@ -149,13 +149,13 @@ to source).
 """
 function fetch_path end
 @traitfn function fetch_path(
-    residual_graph::::lg.IsDirected,               # the input graph
+    residual_graph::::Graphs.IsDirected,               # the input graph
     source::Integer,                           # the source vertex
     target::Integer,                           # the target vertex
     flow_matrix::AbstractMatrix,       # the current flow matrix
     capacity_matrix::AbstractMatrix    # edge flow capacities
     )
-    n = lg.nv(residual_graph)
+    n = Graphs.nv(residual_graph)
     P = fill(-1, n)
     S = fill(-1, n)
     return fetch_path!(residual_graph, source, target, flow_matrix, capacity_matrix, P, S)

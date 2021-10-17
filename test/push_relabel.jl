@@ -1,6 +1,6 @@
 @testset "Push relabel" begin
     # Construct DiGraph
-    flow_graph = lg.DiGraph(8)
+    flow_graph = Graphs.DiGraph(8)
 
     # Load custom dataset
     flow_edges = [
@@ -13,21 +13,21 @@
 
     for e in flow_edges
         u, v, f = e
-        lg.add_edge!(flow_graph, u, v)
+        Graphs.add_edge!(flow_graph, u, v)
         capacity_matrix[u, v] = f
     end
     for g in testdigraphs(flow_graph)
-      residual_graph = @inferred(LightGraphsFlows.residual(g))
+      residual_graph = @inferred(GraphsFlows.residual(g))
 
       # Test enqueue_vertex
       Q = Array{Int,1}()
       excess = [0, 1, 0, 1]
       active = [false, false, true, true]
-      @test @inferred(LightGraphsFlows.enqueue_vertex!(Q, 1, active, excess)) == nothing
-      @test @inferred(LightGraphsFlows.enqueue_vertex!(Q, 3, active, excess)) == nothing
-      @test @inferred(LightGraphsFlows.enqueue_vertex!(Q, 4, active, excess)) == nothing
+      @test @inferred(GraphsFlows.enqueue_vertex!(Q, 1, active, excess)) == nothing
+      @test @inferred(GraphsFlows.enqueue_vertex!(Q, 3, active, excess)) == nothing
+      @test @inferred(GraphsFlows.enqueue_vertex!(Q, 4, active, excess)) == nothing
       @test length(Q) == 0
-      @test @inferred(LightGraphsFlows.enqueue_vertex!(Q, 2, active, excess)) == nothing
+      @test @inferred(GraphsFlows.enqueue_vertex!(Q, 2, active, excess)) == nothing
       @test length(Q) == 1
 
       # Test push_flow
@@ -36,10 +36,10 @@
       height = [8, 0, 0, 0, 0, 0, 0, 0]
       active = [true, false, false, false, false, false, false, true]
       flow_matrix = zeros(Int, 8, 8)
-      @test @inferred(LightGraphsFlows.push_flow!(residual_graph, 1, 2, capacity_matrix, flow_matrix, excess, height, active, Q)) == nothing
+      @test @inferred(GraphsFlows.push_flow!(residual_graph, 1, 2, capacity_matrix, flow_matrix, excess, height, active, Q)) == nothing
       @test length(Q) == 1
       @test flow_matrix[1, 2] == 10
-      @test @inferred(LightGraphsFlows.push_flow!(residual_graph, 2, 3, capacity_matrix, flow_matrix, excess, height, active, Q)) == nothing
+      @test @inferred(GraphsFlows.push_flow!(residual_graph, 2, 3, capacity_matrix, flow_matrix, excess, height, active, Q)) == nothing
       @test length(Q) == 1
       @test flow_matrix[2, 3] == 0
 
@@ -51,7 +51,7 @@
       count  = [0, 1, 2, 2, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
       flow_matrix = zeros(Int, 8, 8)
 
-      @test @inferred(LightGraphsFlows.gap!(residual_graph, 1, excess, height, active, count, Q)) == nothing
+      @test @inferred(GraphsFlows.gap!(residual_graph, 1, excess, height, active, count, Q)) == nothing
       @test length(Q) == 2
 
       # Test relabel
@@ -62,7 +62,7 @@
       count  = [1, 6, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
       flow_matrix = zeros(Int, 8, 8)
 
-      @test @inferred(LightGraphsFlows.relabel!(residual_graph, 2, capacity_matrix, flow_matrix, excess, height, active, count, Q)) == nothing
+      @test @inferred(GraphsFlows.relabel!(residual_graph, 2, capacity_matrix, flow_matrix, excess, height, active, count, Q)) == nothing
       @test length(Q) == 1
 
       # Test discharge
@@ -73,14 +73,14 @@
       count  = [7, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       flow_matrix = zeros(Int, 8, 8)
 
-      @test @inferred(LightGraphsFlows.discharge!(residual_graph, 1, capacity_matrix, flow_matrix, excess, height, active, count, Q)) == nothing
+      @test @inferred(GraphsFlows.discharge!(residual_graph, 1, capacity_matrix, flow_matrix, excess, height, active, count, Q)) == nothing
       @test length(Q) == 3
 
       # Test with default distances
-      @test LightGraphsFlows.push_relabel(residual_graph, 1, 8, LightGraphsFlows.DefaultCapacity(residual_graph))[1] == 3
+      @test GraphsFlows.push_relabel(residual_graph, 1, 8, GraphsFlows.DefaultCapacity(residual_graph))[1] == 3
 
       # Test with capacity matrix
-      @test LightGraphsFlows.push_relabel(residual_graph, 1, 8, capacity_matrix)[1] == 28
+      @test GraphsFlows.push_relabel(residual_graph, 1, 8, capacity_matrix)[1] == 28
     end
     # Non regression test added for #448
     M448 = [0 1 0 0 1 1
@@ -89,6 +89,6 @@
             0 0 0 0 0 0
             1 0 1 0 0 1
             0 0 0 0 1 0]
-    g448 = lg.DiGraph(M448)
+    g448 = Graphs.DiGraph(M448)
     @test maximum_flow(g448, 1, 2, M448, algorithm=PushRelabelAlgorithm())[1] == 1
 end

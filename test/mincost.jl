@@ -6,15 +6,15 @@ using SparseArrays: spzeros
 
     # bipartite oriented + source & sink
     # source 5, sink 6, v1 {1, 2} v2 {3, 4}
-    g = lg.DiGraph(6)
-    lg.add_edge!(g, 5, 1)
-    lg.add_edge!(g, 5, 2)
-    lg.add_edge!(g, 3, 6)
-    lg.add_edge!(g, 4, 6)
-    lg.add_edge!(g, 1, 3)
-    lg.add_edge!(g, 1, 4)
-    lg.add_edge!(g, 2, 3)
-    lg.add_edge!(g, 2, 4)
+    g = Graphs.DiGraph(6)
+    Graphs.add_edge!(g, 5, 1)
+    Graphs.add_edge!(g, 5, 2)
+    Graphs.add_edge!(g, 3, 6)
+    Graphs.add_edge!(g, 4, 6)
+    Graphs.add_edge!(g, 1, 3)
+    Graphs.add_edge!(g, 1, 4)
+    Graphs.add_edge!(g, 2, 3)
+    Graphs.add_edge!(g, 2, 4)
     cost = zeros(6,6)
     cost[1,3] = 10.
     cost[1,4] = 5.
@@ -27,7 +27,7 @@ using SparseArrays: spzeros
     capacity = ones(6,6)
 
     o = GLPK.Optimizer
-    node_demand = spzeros(lg.nv(g))
+    node_demand = spzeros(Graphs.nv(g))
     flow = mincost_flow(g, node_demand, capacity, cost, o, edge_demand=demand, source_nodes=[5], sink_nodes=[6])
     @test flow[5,1] ≈ 1
     @test flow[5,2] ≈ 1
@@ -85,7 +85,7 @@ using SparseArrays: spzeros
 
     # no demand => null flow
     d2 = spzeros(6,6)
-    flow = mincost_flow(g, spzeros(lg.nv(g)), capacity, cost, o, edge_demand=d2, source_nodes=[5], sink_nodes=[6])
+    flow = mincost_flow(g, spzeros(Graphs.nv(g)), capacity, cost, o, edge_demand=d2, source_nodes=[5], sink_nodes=[6])
     for i in 1:6
         for j in 1:6
             @test flow[i,j] ≈ 0.0
@@ -93,19 +93,19 @@ using SparseArrays: spzeros
     end
 
     # graph without sink or source
-    g = lg.DiGraph(6)
+    g = Graphs.DiGraph(6)
     # create circuit
     for s in 1:5
-        lg.add_edge!(g, s, s+1)
+        Graphs.add_edge!(g, s, s+1)
     end
-    lg.add_edge!(g, 6, 1)
-    lg.add_edge!(g, 2, 5) # shortcut
+    Graphs.add_edge!(g, 6, 1)
+    Graphs.add_edge!(g, 2, 5) # shortcut
 
     capacity = ones(6,6)
     demand = spzeros(6,6)
     demand[1,2] = 1
     costs = ones(6,6)
-    flow = mincost_flow(g,spzeros(lg.nv(g)), capacity, costs, o, edge_demand=demand)
+    flow = mincost_flow(g,spzeros(Graphs.nv(g)), capacity, costs, o, edge_demand=demand)
     active_flows = [(1,2), (2,5), (5,6),(6,1)]
     for s in 1:6
         for t in 1:6
@@ -122,7 +122,7 @@ using SparseArrays: spzeros
     end
     # higher short-circuit cost
     costs[2,5] = 10.
-    flow = mincost_flow(g,spzeros(lg.nv(g)), capacity, costs, o, edge_demand=demand)
+    flow = mincost_flow(g,spzeros(Graphs.nv(g)), capacity, costs, o, edge_demand=demand)
     active_flows = [(1,2),(2,3),(3,4),(4,5),(5,6),(6,1)]
     for s in 1:6
         for t in 1:6

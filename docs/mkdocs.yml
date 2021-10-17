@@ -1,6 +1,6 @@
-site_name:        LightGraphsFlows.jl
-repo_url:         https://github.com/JuliaGraphs/LightGraphsFlows.jl
-site_description: Documentation for LightGraphsFlows, the JuliaGraphs package for flow and cut problems
+site_name:        GraphsFlows.jl
+repo_url:         https://github.com/JuliaGraphs/GraphsFlows.jl
+site_description: Documentation for GraphsFlows, the JuliaGraphs package for flow and cut problems
 site_author:      JuliaGraphs
 
 theme: material

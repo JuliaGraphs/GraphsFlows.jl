@@ -55,12 +55,12 @@
     ]
 
     for (nvertices, flow_edges, s, t, froutes, breakpts, ffloat) in graphs
-        flow_graph = lg.DiGraph(nvertices)
+        flow_graph = Graphs.DiGraph(nvertices)
         for g in testdigraphs(flow_graph)
             capacity_matrix = zeros(Int, nvertices, nvertices)
             for e in flow_edges
                 u, v, f = e
-                lg.add_edge!(g, u, v)
+                Graphs.add_edge!(g, u, v)
                 capacity_matrix[u, v] = f
             end
             # Test ExtendedMultirouteFlowAlgorithm when the number of routes is either

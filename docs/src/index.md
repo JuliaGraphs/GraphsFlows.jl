@@ -1,26 +1,23 @@
- # LightGraphsFlows.jl: flow algorithms for LightGraphs
+ # GraphsFlows.jl: flow algorithms for Graphs.jl
 
 ```@meta
-CurrentModule = LightGraphsFlows
+CurrentModule = GraphsFlows
 DocTestSetup = quote
-    using LightGraphsFlows
-    import LightGraphs
-    const lg = LightGraphs
+    using GraphsFlows
+    import Graphs
 end
 ```
 
 ```@autodocs
-Modules = [LightGraphsFlows]
-Pages = ["LightGraphsFlows.jl"]
+Modules = [GraphsFlows]
+Pages = ["GraphsFlows.jl"]
 Order = [:function, :type]
 ```
 
-This is the documentation page for `LightGraphsFlows`. In all pages, we assume
-LightGraphsFlows has been imported into scope and that LightGraphs is 
-available with the alias `lg`:
+This is the documentation page for `GraphsFlows`. In all pages, we assume
+GraphsFlows has been imported into scope and that Graphs.jl has been imported.
 
 ```julia
-using LightGraphsFlows
-import LightGraphs
-const lg = LightGraphs
+using GraphsFlows
+import Graphs
 ```

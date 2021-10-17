@@ -1,7 +1,7 @@
 ## Min-cost flow
 
 ```@autodocs
-Modules = [LightGraphsFlows]
+Modules = [GraphsFlows]
 Pages = ["mincost.jl"]
 Order = [:function, :type]
 ```
