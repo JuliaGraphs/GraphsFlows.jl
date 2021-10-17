@@ -28,23 +28,23 @@
     ]
 
     for (nvertices, flow_edges, s, t, fdefault, fcustom, frestrict, caprestrict) in graphs
-        flow_graph = lg.DiGraph(nvertices)
+        flow_graph = Graphs.DiGraph(nvertices)
         for g in testdigraphs(flow_graph)
             capacity_matrix = zeros(Int, nvertices, nvertices)
             for e in flow_edges
                 u, v, f = e
-                lg.add_edge!(g, u, v)
+                Graphs.add_edge!(g, u, v)
                 capacity_matrix[u, v] = f
             end
 
             # Test DefaultCapacity
-            d = @inferred(LightGraphsFlows.DefaultCapacity(g))
+            d = @inferred(GraphsFlows.DefaultCapacity(g))
             T = eltype(d)
             @test typeof(d) <: AbstractMatrix{T}
             @test d[s, t] == 0
             @test size(d) == (nvertices, nvertices)
-            @test typeof(transpose(d)) <: LightGraphsFlows.DefaultCapacity
-            @test typeof(adjoint(d)) <: LightGraphsFlows.DefaultCapacity
+            @test typeof(transpose(d)) <: GraphsFlows.DefaultCapacity
+            @test typeof(adjoint(d)) <: GraphsFlows.DefaultCapacity
 
             # Test all algorithms - type instability in PushRelabel #553
             for ALGO in [EdmondsKarpAlgorithm, DinicAlgorithm, BoykovKolmogorovAlgorithm, PushRelabelAlgorithm]

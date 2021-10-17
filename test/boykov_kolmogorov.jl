@@ -151,17 +151,17 @@
 
   @testset "Find path" begin
     # construct graph
-    gg = lg.DiGraph(3)
-    lg.add_edge!(gg, 1, 2)
-    lg.add_edge!(gg, 2, 3)
+    gg = Graphs.DiGraph(3)
+    Graphs.add_edge!(gg, 1, 2)
+    Graphs.add_edge!(gg, 2, 3)
 
     # source and sink terminals
     source, target = 1, 3
 
     for g in testdigraphs(gg)
       # default capacity
-      capacity_matrix = LightGraphsFlows.DefaultCapacity(g)
-      residual_graph = @inferred(LightGraphsFlows.residual(g))
+      capacity_matrix = GraphsFlows.DefaultCapacity(g)
+      residual_graph = @inferred(GraphsFlows.residual(g))
       T = eltype(g)
       flow_matrix = zeros(T, 3, 3)
       TREE = zeros(T, 3)
@@ -169,7 +169,7 @@
       TREE[target] = T(2)
       PARENT = zeros(T, 3)
       A = [T(source), T(target)]
-      path = LightGraphsFlows.find_path!(
+      path = GraphsFlows.find_path!(
         residual_graph, source, target, flow_matrix,
         capacity_matrix, PARENT, TREE, A)
 

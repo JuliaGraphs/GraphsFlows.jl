@@ -1,7 +1,6 @@
-module LightGraphsFlows
+module GraphsFlows
 
-using LightGraphs
-const lg = LightGraphs
+using Graphs
 
 using SimpleTraits: @traitfn, @traitimpl
 import SimpleTraits

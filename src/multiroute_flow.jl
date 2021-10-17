@@ -40,7 +40,7 @@ end
 
 # Method for Kishimoto algorithm
 @traitfn function multiroute_flow(
-    flow_graph::::lg.IsDirected,                   # the input graph
+    flow_graph::::Graphs.IsDirected,                   # the input graph
     source::Integer,                       # the source vertex
     target::Integer,                       # the target vertex
     capacity_matrix::AbstractMatrix,  # edge flow capacities
@@ -54,7 +54,7 @@ end
 ## Methods for Extended Multiroute Flow Algorithm
 #1 When the breaking points are not already known
 @traitfn function multiroute_flow(
-    flow_graph::::lg.IsDirected,                       # the input graph
+    flow_graph::::Graphs.IsDirected,                       # the input graph
     source::Integer,                                # the source vertex
     target::Integer,                                # the target vertex
     capacity_matrix::AbstractMatrix,           # edge flow capacities
@@ -76,7 +76,7 @@ multiroute_flow(
 function multiroute_flow(
     breakingpoints::AbstractVector{Tuple{T1,T1,Int}}, # vector of breaking points
     routes::R,                                # keyword argument for routes
-    flow_graph::lg.AbstractGraph,                      # the input graph
+    flow_graph::Graphs.AbstractGraph,                      # the input graph
     source::Integer,                          # the source vertex
     target::Integer,                          # the target vertex
     capacity_matrix::AbstractMatrix{T2} =   # edge flow capacities
@@ -156,7 +156,7 @@ in the following cases:
 and capacity_matrix)
 
 ```julia
-julia> flow_graph = lg.DiGraph(8) # Create a flow graph
+julia> flow_graph = Graphs.DiGraph(8) # Create a flow graph
 
 julia> flow_edges = [
 (1, 2, 10), (1, 3, 5),  (1, 4, 15), (2, 3, 4),  (2, 5, 9),
@@ -187,7 +187,7 @@ julia> f, F, labels = multiroute_flow(flow_graph, 1, 8, capacity_matrix, algorit
 ```
 """
 function multiroute_flow(
-        flow_graph::lg.AbstractGraph,                    # the input graph
+        flow_graph::Graphs.AbstractGraph,                    # the input graph
         source::Integer,                                 # the source vertex
         target::Integer,                                 # the target vertex
         capacity_matrix::AbstractMatrix{T} =             # edge flow capacities

@@ -1,4 +1,4 @@
-The LightGraphsFlows.jl package is licensed under the Simplified "2-clause" BSD License:
+The GraphsFlows.jl package is licensed under the Simplified "2-clause" BSD License:
 
 > Copyright (c) 2018: mbesancon.
 > All rights reserved.

@@ -8,12 +8,12 @@ Return the value of the maximum flow as well as the final flow matrix.
 """
 function dinic_impl end
 @traitfn function dinic_impl(
-        residual_graph::::lg.IsDirected,               # the input graph
+        residual_graph::::Graphs.IsDirected,               # the input graph
         source::Integer,                       # the source vertex
         target::Integer,                       # the target vertex
         capacity_matrix::AbstractMatrix{T}    # edge flow capacities
     ) where {T}
-    n = lg.nv(residual_graph)                     # number of vertexes
+    n = Graphs.nv(residual_graph)                     # number of vertexes
     flow_matrix = zeros(T, n, n)           # initialize flow matrix
     P = zeros(Int, n)                      # Sharable parent vector
 
@@ -37,14 +37,14 @@ Like `blocking_flow`, but requires a preallocated parent vector `P`.
 """
 function blocking_flow! end
 @traitfn function blocking_flow!(
-        residual_graph::::lg.IsDirected,     # the input graph
+        residual_graph::::Graphs.IsDirected,     # the input graph
         source::Integer,                     # the source vertex
         target::Integer,                     # the target vertex
         capacity_matrix::AbstractMatrix{T},  # edge flow capacities
         flow_matrix::AbstractMatrix,         # the current flow matrix
         P::AbstractVector{Int}               # Parent vector to store Level Graph
     ) where {T}
-    n = lg.nv(residual_graph)                # number of vertexes
+    n = Graphs.nv(residual_graph)                # number of vertexes
     fill!(P, -1)
     P[source] = -2
 
@@ -53,7 +53,7 @@ function blocking_flow! end
 
     while length(Q) > 0                   # Construct the Level Graph using BFS
         u = pop!(Q)
-        for v in lg.outneighbors(residual_graph, u)
+        for v in Graphs.outneighbors(residual_graph, u)
             if P[v] == -1 && capacity_matrix[u, v] > flow_matrix[u, v]
                 P[v] = u
                 pushfirst!(Q, v)
@@ -65,7 +65,7 @@ function blocking_flow! end
 
     total_flow = 0
 
-    for bv in lg.inneighbors(residual_graph, target)    # Trace all possible routes to source
+    for bv in Graphs.inneighbors(residual_graph, target)    # Trace all possible routes to source
         flow = typemax(T)
         v = target
         u = bv
@@ -104,7 +104,7 @@ matrix `flow_matrix`and then backtrack from `target` to `source`,
 augmenting flow along all possible paths.
 """
 blocking_flow(
-    residual_graph::lg.AbstractGraph,  # the input graph
+    residual_graph::Graphs.AbstractGraph,  # the input graph
     source::Integer,                   # the source vertex
     target::Integer,                   # the target vertex
     capacity_matrix::AbstractMatrix,   # edge flow capacities
@@ -115,4 +115,4 @@ blocking_flow(
             target,
             capacity_matrix,
             flow_matrix,
-            zeros(Int, lg.nv(residual_graph)))
+            zeros(Int, Graphs.nv(residual_graph)))

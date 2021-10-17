@@ -37,14 +37,14 @@ struct PushRelabelAlgorithm <: AbstractFlowAlgorithm end
 Structure that returns `1` if a forward edge exists in `flow_graph`, and `0` otherwise.
 """
 struct DefaultCapacity{T<:Integer} <: AbstractMatrix{T}
-    flow_graph::lg.DiGraph
+    flow_graph::Graphs.DiGraph
     nv::T
 end
 
-@traitfn DefaultCapacity(flow_graph::::lg.IsDirected) =
-    DefaultCapacity(lg.DiGraph(flow_graph), lg.nv(flow_graph))
+@traitfn DefaultCapacity(flow_graph::::Graphs.IsDirected) =
+    DefaultCapacity(Graphs.DiGraph(flow_graph), Graphs.nv(flow_graph))
 
-getindex(d::DefaultCapacity{T}, s::Integer, t::Integer) where T = if lg.has_edge(d.flow_graph, s, t) one(T) else zero(T) end
+getindex(d::DefaultCapacity{T}, s::Integer, t::Integer) where T = if Graphs.has_edge(d.flow_graph, s, t) one(T) else zero(T) end
 # isassigned{T<:Integer}(d::DefaultCapacity{T}, u::T, v::T) = (u in 1:d.nv) && (v in 1:d.nv)
 size(d::DefaultCapacity) = (Int(d.nv), Int(d.nv))
 transpose(d::DefaultCapacity) = DefaultCapacity(reverse(d.flow_graph))
@@ -61,16 +61,16 @@ flow in the reverse direction.
 
 If only the forward edge exists, a reverse edge is created with capacity 0.
 If both forward and reverse edges exist, their capacities are left unchanged.
-Since the capacities in LightGraphs.DefaultDistance cannot be changed, an array of ones
+Since the capacities in Graphs.DefaultDistance cannot be changed, an array of ones
 is created.
 """
 function residual end
-@traitfn residual(flow_graph::::lg.IsDirected) = lg.DiGraph(lg.Graph(flow_graph))
+@traitfn residual(flow_graph::::Graphs.IsDirected) = Graphs.DiGraph(Graphs.Graph(flow_graph))
 
 # Method for Edmonds–Karp algorithm
 
 @traitfn function maximum_flow(
-        flow_graph::::lg.IsDirected,           # the input graph
+        flow_graph::::Graphs.IsDirected,           # the input graph
         source::Integer,                       # the source vertex
         target::Integer,                       # the target vertex
         capacity_matrix::AbstractMatrix,       # edge flow capacities
@@ -83,7 +83,7 @@ end
 # Method for Dinic's algorithm
 
 @traitfn function maximum_flow(
-        flow_graph::::lg.IsDirected,       # the input graph
+        flow_graph::::Graphs.IsDirected,       # the input graph
         source::Integer,                   # the source vertex
         target::Integer,                   # the target vertex
         capacity_matrix::AbstractMatrix,   # edge flow capacities
@@ -96,7 +96,7 @@ end
 # Method for Boykov-Kolmogorov algorithm
 
 @traitfn function maximum_flow(
-    flow_graph::::lg.IsDirected,                   # the input graph
+    flow_graph::::Graphs.IsDirected,                   # the input graph
     source::Integer,                       # the source vertex
     target::Integer,                       # the target vertex
     capacity_matrix::AbstractMatrix,   # edge flow capacities
@@ -109,7 +109,7 @@ end
 # Method for Push-relabel algorithm
 
 @traitfn function maximum_flow(
-        flow_graph::::lg.IsDirected,           # the input graph
+        flow_graph::::Graphs.IsDirected,           # the input graph
         source::Integer,                       # the source vertex
         target::Integer,                       # the target vertex
         capacity_matrix::AbstractMatrix,       # edge flow capacities
@@ -136,7 +136,7 @@ algorithm, the associated mincut is returned as a third output.
 ### Usage Example:
 
 ```julia
-julia> flow_graph = lg.DiGraph(8) # Create a flow-graph
+julia> flow_graph = Graphs.DiGraph(8) # Create a flow-graph
 julia> flow_edges = [
 (1,2,10),(1,3,5),(1,4,15),(2,3,4),(2,5,9),
 (2,6,15),(3,4,4),(3,6,8),(4,7,16),(5,6,15),
@@ -147,7 +147,7 @@ julia> capacity_matrix = zeros(Int, 8, 8)  # Create a capacity matrix
 
 julia> for e in flow_edges
     u, v, f = e
-    lg.add_edge!(flow_graph, u, v)
+    Graphs.add_edge!(flow_graph, u, v)
     capacity_matrix[u,v] = f
 end
 
@@ -164,7 +164,7 @@ julia> f, F, labels = maximum_flow(flow_graph, 1, 8, capacity_matrix, algorithm=
 ```
 """
 function maximum_flow(
-        flow_graph::lg.AbstractGraph,          # the input graph
+        flow_graph::Graphs.AbstractGraph,          # the input graph
         source::Integer,                       # the source vertex
         target::Integer,                       # the target vertex
         capacity_matrix::AbstractMatrix =      # edge flow capacities

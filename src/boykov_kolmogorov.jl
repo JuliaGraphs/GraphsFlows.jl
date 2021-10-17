@@ -17,12 +17,12 @@ Min-Cut/Max-Flow Algorithms for Energy Minimization in Vision.
 function boykov_kolmogorov_impl end
 # see https://github.com/mauro3/SimpleTraits.jl/issues/47#issuecomment-327880153 for syntax
 @traitfn function boykov_kolmogorov_impl(
-        residual_graph::AG::lg.IsDirected,    # the input graph
+        residual_graph::AG::Graphs.IsDirected,    # the input graph
         source::Integer,                      # the source vertex
         target::Integer,                      # the target vertex
         capacity_matrix::AbstractMatrix{T}    # edge flow capacities
-    ) where {T, U, AG<:lg.AbstractGraph{U}}
-    n = lg.nv(residual_graph)
+    ) where {T, U, AG<:Graphs.AbstractGraph{U}}
+    n = Graphs.nv(residual_graph)
 
     flow = 0
     flow_matrix = zeros(T, n, n)
@@ -54,7 +54,7 @@ end
 
 # see https://github.com/mauro3/SimpleTraits.jl/issues/47#issuecomment-327880153 for syntax
 @traitfn function find_path!(
-        residual_graph::AG::lg.IsDirected, # the input graph
+        residual_graph::AG::Graphs.IsDirected, # the input graph
         source::Integer,                   # the source vertex
         target::Integer,                   # the target vertex
         flow_matrix::AbstractMatrix,       # the current flow matrix
@@ -62,12 +62,12 @@ end
         PARENT::Vector,                    # parent table
         TREE::Vector,                      # tree table
         A::Vector                          # active set
-    ) where {T, AG<:lg.AbstractGraph{T}}
+    ) where {T, AG<:Graphs.AbstractGraph{T}}
     tree_cap(p, q) = TREE[p] == one(T) ? capacity_matrix[p, q] - flow_matrix[p, q] :
     capacity_matrix[q, p] - flow_matrix[q, p]
     while !isempty(A)
         p = last(A)
-        for q in lg.neighbors(residual_graph, p)
+        for q in Graphs.neighbors(residual_graph, p)
             if tree_cap(p, q) > 0
                 if TREE[q] == zero(T)
                     TREE[q] = TREE[p]
@@ -147,7 +147,7 @@ function augment!(
 end
 
 @traitfn function adopt!(
-        residual_graph::AG::lg.IsDirected,  # the input graph
+        residual_graph::AG::Graphs.IsDirected,  # the input graph
         source::Integer,                    # the source vertex
         target::Integer,                    # the target vertex
         flow_matrix::AbstractMatrix,        # the current flow matrix
@@ -156,14 +156,14 @@ end
         TREE::Vector,                       # tree table
         A::Vector,                          # active set
         O::Vector                           # orphan set
-    ) where {T, AG<:lg.AbstractGraph{T}}
+    ) where {T, AG<:Graphs.AbstractGraph{T}}
     tree_cap(p, q) = TREE[p] == 1 ? capacity_matrix[p, q] - flow_matrix[p, q] :
     capacity_matrix[q, p] - flow_matrix[q, p]
     while !isempty(O)
         p = pop!(O)
         # try to find parent that is not an orphan
         parent_found = false
-        for q in lg.neighbors(residual_graph, p)
+        for q in Graphs.neighbors(residual_graph, p)
             if TREE[q] == TREE[p] && tree_cap(q, p) > 0
                 # check if "origin" is either source or target
                 o = q
@@ -180,7 +180,7 @@ end
 
         if !parent_found
             # scan all neighbors and make the orphan a free node
-            for q in lg.neighbors(residual_graph, p)
+            for q in Graphs.neighbors(residual_graph, p)
                 if TREE[q] == TREE[p]
                     if tree_cap(q, p) > 0
                         pushfirst!(A, q)

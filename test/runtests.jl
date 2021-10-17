@@ -1,8 +1,7 @@
-using LightGraphsFlows
+using GraphsFlows
 using Test
-using LightGraphs
+using Graphs
 import SimpleTraits
-const lg = LightGraphs
 
 using LinearAlgebra: diag
 using SparseArrays: spzeros
@@ -12,8 +11,8 @@ import GLPK
 
 const testdir = dirname(@__FILE__)
 
-testgraphs(g) = [g, lg.Graph{UInt8}(g), lg.Graph{Int16}(g)]
-testdigraphs(g) = [g, lg.DiGraph{UInt8}(g), lg.DiGraph{Int16}(g)]
+testgraphs(g) = [g, Graphs.Graph{UInt8}(g), Graphs.Graph{Int16}(g)]
+testdigraphs(g) = [g, Graphs.DiGraph{UInt8}(g), Graphs.DiGraph{Int16}(g)]
 
 for t in [
         "edmonds_karp",

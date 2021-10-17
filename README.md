@@ -1,24 +1,23 @@
-# LightGraphsFlows
+# GraphsFlows
 
-[![CI](https://github.com/JuliaGraphs/LightGraphsFlows.jl/actions/workflows/ci.yml/badge.svg)](https://github.com/JuliaGraphs/LightGraphsFlows.jl/actions/workflows/ci.yml)
-[![codecov.io](http://codecov.io/github/JuliaGraphs/LightGraphsFlows.jl/coverage.svg?branch=master)](http://codecov.io/github/JuliaGraphs/LightGraphsFlows.jl?branch=master)
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliagraphs.github.io/LightGraphsFlows.jl/stable/)
+[![CI](https://github.com/JuliaGraphs/GraphsFlows.jl/actions/workflows/ci.yml/badge.svg)](https://github.com/JuliaGraphs/GraphsFlows.jl/actions/workflows/ci.yml)
+[![codecov.io](http://codecov.io/github/JuliaGraphs/GraphsFlows.jl/coverage.svg?branch=master)](http://codecov.io/github/JuliaGraphs/GraphsFlows.jl?branch=master)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliagraphs.github.io/GraphsFlows.jl/stable/)
 
-Flow algorithms on top of [LightGraphs.jl](https://github.com/JuliaGraphs/LightGraphs.jl),
+Flow algorithms on top of [Graphs.jl](https://github.com/JuliaGraphs/Graphs.jl),
 including `maximum_flow`, `multiroute_flow` and `mincost_flow`. 
 See [Maximum flow problem](https://en.wikipedia.org/wiki/Maximum_flow_problem)
 for a detailed description of the problem.
 
-Documentation for this package is available [here](https://juliagraphs.github.io/LightGraphsFlows.jl/latest/). For an overview of JuliaGraphs, see [this page](https://juliagraphs.github.io/).
+Documentation for this package is available [here](https://juliagraphs.github.io/GraphsFlows.jl/latest/). For an overview of JuliaGraphs, see [this page](https://juliagraphs.github.io/).
 
 ## Usage
 
 ### Maxflow 
 
 ```julia
-julia> using LightGraphs, LightGraphsFlows
-julia> const LG = LightGraphs
-julia> flow_graph = LG.DiGraph(8) # Create a flow graph
+julia> using Graphs, GraphsFlows
+julia> flow_graph = Graphs.DiGraph(8) # Create a flow graph
 julia> flow_edges = [
     (1,2,10),(1,3,5),(1,4,15),(2,3,4),(2,5,9),
     (2,6,15),(3,4,4),(3,6,8),(4,7,16),(5,6,15),
@@ -29,7 +28,7 @@ julia> capacity_matrix = zeros(Int, 8, 8)  # Create a capacity matrix
 
 julia> for e in flow_edges
     u, v, f = e
-    LG.add_edge!(flow_graph, u, v)
+    Graphs.add_edge!(flow_graph, u, v)
     capacity_matrix[u,v] = f
 end
 
@@ -47,10 +46,9 @@ julia> f, F, labels = maximum_flow(flow_graph, 1, 8, capacity_matrix, algorithm=
 ### Multi-route flow
 
 ```julia
-julia> using LightGraphs, LightGraphsFlows
-julia> const LG =  LightGraphs
+julia> using Graphs, GraphsFlows
 
-julia> flow_graph = LG.DiGraph(8) # Create a flow graph
+julia> flow_graph = Graphs.DiGraph(8) # Create a flow graph
 
 julia> flow_edges = [
 (1, 2, 10), (1, 3, 5),  (1, 4, 15), (2, 3, 4),  (2, 5, 9),
@@ -62,7 +60,7 @@ julia> capacity_matrix = zeros(Int, 8, 8) # Create a capacity matrix
 
 julia> for e in flow_edges
     u, v, f = e
-    LG.add_edge!(flow_graph, u, v)
+    Graphs.add_edge!(flow_graph, u, v)
     capacity_matrix[u, v] = f
 end
 
@@ -86,18 +84,17 @@ defined by [MathOptInterface.jl](https://www.juliaopt.org/MathOptInterface.jl/st
 julia> using SparseArrays: spzeros
 julia> import Clp
 
-julia> using LightGraphs, LightGraphsFlows
-julia> const LG =  LightGraphs
+julia> using Graphs, GraphsFlows
 
-julia> g = LG.DiGraph(6)
-julia> LG.add_edge!(g, 5, 1)
-julia> LG.add_edge!(g, 5, 2)
-julia> LG.add_edge!(g, 3, 6)
-julia> LG.add_edge!(g, 4, 6)
-julia> LG.add_edge!(g, 1, 3)
-julia> LG.add_edge!(g, 1, 4)
-julia> LG.add_edge!(g, 2, 3)
-julia> LG.add_edge!(g, 2, 4)
+julia> g = Graphs.DiGraph(6)
+julia> Graphs.add_edge!(g, 5, 1)
+julia> Graphs.add_edge!(g, 5, 2)
+julia> Graphs.add_edge!(g, 3, 6)
+julia> Graphs.add_edge!(g, 4, 6)
+julia> Graphs.add_edge!(g, 1, 3)
+julia> Graphs.add_edge!(g, 1, 4)
+julia> Graphs.add_edge!(g, 2, 3)
+julia> Graphs.add_edge!(g, 2, 4)
 julia> cost = zeros(6,6)
 julia> cost[1,3] = 10.
 julia> cost[1,4] = 5.

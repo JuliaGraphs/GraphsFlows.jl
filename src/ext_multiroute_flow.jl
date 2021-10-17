@@ -15,7 +15,7 @@ multiroute flow function.
 - [Extended Multiroute Flow algorithm](http://dx.doi.org/10.1016/j.disopt.2016.05.002)
 """
 function emrf(
-        flow_graph::lg.AbstractGraph,          # the input graph
+        flow_graph::Graphs.AbstractGraph,          # the input graph
         source::Integer,                       # the source vertex
         target::Integer,                       # the target vertex
         capacity_matrix::AbstractMatrix,       # edge flow capacities
@@ -42,14 +42,14 @@ One point by possible slope is enough (hence ``\\mathcal{O}(λ×maximum_flow)`` 
 """
 function auxiliaryPoints end
 @traitfn function auxiliaryPoints(
-    flow_graph::::lg.IsDirected,                   # the input graph
+    flow_graph::::Graphs.IsDirected,                   # the input graph
     source::Integer,                           # the source vertex
     target::Integer,                           # the target vertex
     capacity_matrix::AbstractMatrix   # edge flow capacities
     )
     # Problem descriptors
     λ = maximum_flow(flow_graph, source, target)[1] # Connectivity
-    n = lg.nv(flow_graph) # number of vertices
+    n = Graphs.nv(flow_graph) # number of vertices
     r1, r2 = minmaxCapacity(capacity_matrix) # restriction left (1) and right (2)
     auxpoints = fill((0., 0.), λ + 1)
 
@@ -105,7 +105,7 @@ for `flow_graph` from `source to `target` using capacities in `capacity_matrix`.
 """
 function breakingPoints end
 @traitfn function breakingPoints(
-        flow_graph::::lg.IsDirected,                   # the input graph
+        flow_graph::::Graphs.IsDirected,                   # the input graph
         source::Integer,                           # the source vertex
         target::Integer,                           # the target vertex
         capacity_matrix::AbstractMatrix{T}   # edge flow capacities
@@ -165,21 +165,21 @@ each edge whose capacity does not exceed `restriction`.
 function slope end
 # Function to get the slope of the restricted flow
 @traitfn function slope(
-        flow_graph::::lg.IsDirected,      # the input graph
+        flow_graph::::Graphs.IsDirected,      # the input graph
         capacity_matrix::AbstractMatrix,  # edge flow capacities
         cut::Vector,                      # cut information for vertices
         restriction::Number               # value of the restriction
     )
     slope = 0
-    for e in lg.edges(flow_graph)
+    for e in Graphs.edges(flow_graph)
         ## Chain comparison to wether an edge cross the cut from the source side of
         # the cut to the target side of the cut. Then the edge is selected iff the
         # capacity of the edge is larger then the restriction argument.
         # cut[dst(e)] == 2 > cut[src(e)] is equivalent to
         # cut[dst(e)] == 2 && 2 > cut[src(e)]
         # Description of chain comparisons can be found at https://goo.gl/IJpCqe
-        if cut[lg.dst(e)] == 2 > cut[lg.src(e)] &&
-            capacity_matrix[lg.src(e), lg.dst(e)] > restriction
+        if cut[Graphs.dst(e)] == 2 > cut[Graphs.src(e)] &&
+            capacity_matrix[Graphs.src(e), Graphs.dst(e)] > restriction
             slope += 1
         end
     end

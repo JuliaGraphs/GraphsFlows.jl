@@ -1,6 +1,6 @@
 @testset "Mincut" begin
 
-    g = lg.complete_digraph(5)
+    g = Graphs.complete_digraph(5)
     cap1 = [
        0.0 2.0 2.0 0.0 0.0
        0.0 0.0 0.0 0.0 3.0
@@ -8,7 +8,7 @@
        0.0 0.0 0.0 0.0 1.0
        0.0 0.0 0.0 0.0 0.0
     ];
-    (part1, part2, value) = LightGraphsFlows.mincut(g,1,5,cap1,LightGraphsFlows.PushRelabelAlgorithm())
+    (part1, part2, value) = GraphsFlows.mincut(g,1,5,cap1,GraphsFlows.PushRelabelAlgorithm())
     @test value ≈ 4.0
     @test part1 == [1]
     @test sort(part2) == collect(2:5)
@@ -19,25 +19,25 @@
        0.0 0.0 0.0 0.0 1.5
        0.0 0.0 0.0 0.0 0.0
     ];
-    (part1, part2, value) = LightGraphsFlows.mincut(g,1,5,cap2,LightGraphsFlows.PushRelabelAlgorithm())
+    (part1, part2, value) = GraphsFlows.mincut(g,1,5,cap2,GraphsFlows.PushRelabelAlgorithm())
     @test value ≈ 4.5
     @test sort(part1) == collect(1:4)
     @test part2 == [5]
 
-    g2 = lg.DiGraph(5)
-    lg.add_edge!(g2,1,2)
-    lg.add_edge!(g2,1,3)
-    lg.add_edge!(g2,3,4)
-    lg.add_edge!(g2,3,2)
-    lg.add_edge!(g2,2,5)
+    g2 = Graphs.DiGraph(5)
+    Graphs.add_edge!(g2,1,2)
+    Graphs.add_edge!(g2,1,3)
+    Graphs.add_edge!(g2,3,4)
+    Graphs.add_edge!(g2,3,2)
+    Graphs.add_edge!(g2,2,5)
 
-    (part1, part2, value) = LightGraphsFlows.mincut(g2,1,5,cap1,LightGraphsFlows.PushRelabelAlgorithm())
+    (part1, part2, value) = GraphsFlows.mincut(g2,1,5,cap1,GraphsFlows.PushRelabelAlgorithm())
     @test value ≈ 3.0
     @test sort(part1) == [1,3,4]
     @test sort(part2) == [2,5]
 
     #non regression test
-    flow_graph = lg.DiGraph(7)
+    flow_graph = Graphs.DiGraph(7)
     capacity_matrix = zeros(7,7)
     flow_edges = [
     (1,2,2),(1,3,2),(2,4,4),(2,5,4),
@@ -45,10 +45,10 @@
     ]
     for e in flow_edges
        u, v, f = e
-    lg.add_edge!(flow_graph, u, v)
+    Graphs.add_edge!(flow_graph, u, v)
     capacity_matrix[u,v] = f
     end
-    (part1, part2, value) = LightGraphsFlows.mincut(flow_graph, 1, 7, capacity_matrix, EdmondsKarpAlgorithm())
+    (part1, part2, value) = GraphsFlows.mincut(flow_graph, 1, 7, capacity_matrix, EdmondsKarpAlgorithm())
     @test value ≈ 3.0
     @test sort(part1) == [1,2,3,4,5,6]
     @test sort(part2) == [7]

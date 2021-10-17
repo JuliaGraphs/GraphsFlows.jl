@@ -2,7 +2,7 @@
 # Kishimoto algorithm
 
 @traitfn function kishimoto(
-        flow_graph::::lg.IsDirected,               # the input graph
+        flow_graph::::Graphs.IsDirected,               # the input graph
         source::Integer,                           # the source vertex
         target::Integer,                           # the target vertex
         capacity_matrix::AbstractMatrix,           # edge flow capacities
@@ -41,7 +41,7 @@ along with a multiroute cut if Boykov-Kolmogorov is used as a subroutine.
 """
 function kishimoto end
 @traitfn function kishimoto(
-        flow_graph::::lg.IsDirected,           # the input graph
+        flow_graph::::Graphs.IsDirected,           # the input graph
         source::Integer,                       # the source vertex
         target::Integer,                       # the target vertex
         capacity_matrix::AbstractMatrix,       # edge flow capacities
