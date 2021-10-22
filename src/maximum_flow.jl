@@ -178,3 +178,10 @@ function maximum_flow(
     end
     return maximum_flow(flow_graph, source, target, capacity_matrix, algorithm)
 end
+
+"""
+is_zero(value)
+Test if the value is equal to zero. It handles floating point errors.
+"""
+is_zero(value::T) where {T<:AbstractFloat} = isapprox(value, 0, atol = sqrt(eps(T)))
+is_zero(value) = (value == 0)
