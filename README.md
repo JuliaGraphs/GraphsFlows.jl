@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/JuliaGraphs/GraphsFlows.jl/actions/workflows/ci.yml/badge.svg)](https://github.com/JuliaGraphs/GraphsFlows.jl/actions/workflows/ci.yml)
 [![codecov.io](http://codecov.io/github/JuliaGraphs/GraphsFlows.jl/coverage.svg?branch=master)](http://codecov.io/github/JuliaGraphs/GraphsFlows.jl?branch=master)
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliagraphs.github.io/GraphsFlows.jl/stable/)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliagraphs.github.io/GraphsFlows.jl/dev/)
 
 Flow algorithms on top of [Graphs.jl](https://github.com/JuliaGraphs/Graphs.jl),
 including `maximum_flow`, `multiroute_flow` and `mincost_flow`. 
