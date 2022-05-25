@@ -189,11 +189,11 @@ function discharge! end
         Q::AbstractVector                   # FIFO queue
     )
     for to in Graphs.outneighbors(residual_graph, v)
-        excess[v] == 0 && break
+        is_zero(excess[v]) && break
         push_flow!(residual_graph, v, to, capacity_matrix, flow_matrix, excess, height, active, Q)
     end
 
-    if excess[v] > 0
+    if ! is_zero(excess[v])
         if count[height[v] + 1] == 1
             gap!(residual_graph, height[v], excess, height, active, count, Q)
         else

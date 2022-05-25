@@ -91,4 +91,24 @@
             0 0 0 0 1 0]
     g448 = Graphs.DiGraph(M448)
     @test maximum_flow(g448, 1, 2, M448, algorithm=PushRelabelAlgorithm())[1] == 1
+
+    # Non regression test for floating point error (issue #28 in LightGraphsFlows.jl)
+    M28 = [0 0 1 1 1 0 0 0
+           0 0 0 0 0 0 0 0
+           0 0 0 0 0 1 1 1
+           0 0 0 0 0 1 1 1
+           0 0 0 0 0 1 1 1
+           0 1 0 0 0 0 0 0
+           0 1 0 0 0 0 0 0
+           0 1 0 0 0 0 0 0]
+    g28 = Graphs.DiGraph(M28)
+    C28 = [0. 0. 0.1 0.1 0.1 0. 0. 0.
+        0. 0. 0. 0. 0. 0. 0. 0.
+        0. 0. 0. 0. 0. 1. 1. 1.
+        0. 0. 0. 0. 0. 1. 1. 1.
+        0. 0. 0. 0. 0. 1. 1. 1.
+        0. 0. 0. 0. 0. 0. 0. 0.
+        0. 0. 0. 0. 0. 0. 0. 0.
+        0. 0. 0. 0. 0. 0. 0. 0.]
+    @test maximum_flow(g28, 1, 2, C28, algorithm=PushRelabelAlgorithm())[1] == 0
 end
