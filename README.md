@@ -9,7 +9,7 @@ including `maximum_flow`, `multiroute_flow` and `mincost_flow`.
 See [Maximum flow problem](https://en.wikipedia.org/wiki/Maximum_flow_problem)
 for a detailed description of the problem.
 
-Documentation for this package is available [here](https://juliagraphs.github.io/GraphsFlows.jl/latest/). For an overview of JuliaGraphs, see [this page](https://juliagraphs.github.io/).
+Documentation for this package is available [here](https://juliagraphs.org/GraphsFlows.jl/dev/). For an overview of JuliaGraphs, see [this page](https://juliagraphs.org/).
 
 ## Usage
 
