@@ -183,5 +183,5 @@ end
 is_zero(value)
 Test if the value is equal to zero. It handles floating point errors.
 """
-is_zero(value::T) where {T<:AbstractFloat} = isapprox(value, 0, atol = sqrt(eps(T)))
-is_zero(value) = (value == 0)
+is_zero(value::T; atol = sqrt(eps(T))) where {T<:AbstractFloat} = isapprox(value, 0, atol = atol)
+is_zero(value; atol) = (value == 0)

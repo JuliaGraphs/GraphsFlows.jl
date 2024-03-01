@@ -11,8 +11,10 @@ function dinic_impl end
         residual_graph::::Graphs.IsDirected,               # the input graph
         source::Integer,                       # the source vertex
         target::Integer,                       # the target vertex
-        capacity_matrix::AbstractMatrix{T}    # edge flow capacities
+        capacity_matrix::AbstractMatrix{T};    # edge flow capacities
+        tolerance::T = (T <: AbstractFloat) ? sqrt(eps(T)) : zero(T)
     ) where {T}
+
     n = Graphs.nv(residual_graph)                     # number of vertexes
     flow_matrix = zeros(T, n, n)           # initialize flow matrix
     P = zeros(Int, n)                      # Sharable parent vector
@@ -20,8 +22,8 @@ function dinic_impl end
     flow = 0
 
     while true
-        augment = blocking_flow!(residual_graph, source, target, capacity_matrix, flow_matrix, P)
-        is_zero(augment) && break
+        augment = blocking_flow!(residual_graph, source, target, capacity_matrix, flow_matrix, P; tolerance = tolerance)
+        is_zero(augment; atol = tolerance) && break
         flow += augment
     end
     return flow, flow_matrix
@@ -42,7 +44,8 @@ function blocking_flow! end
         target::Integer,                     # the target vertex
         capacity_matrix::AbstractMatrix{T},  # edge flow capacities
         flow_matrix::AbstractMatrix,         # the current flow matrix
-        P::AbstractVector{Int}               # Parent vector to store Level Graph
+        P::AbstractVector{Int};               # Parent vector to store Level Graph
+        tolerance = (T <: AbstractFloat) ? sqrt(eps(T)) : zero(T)
     ) where {T}
     n = Graphs.nv(residual_graph)                # number of vertexes
     fill!(P, -1)
@@ -80,7 +83,7 @@ function blocking_flow! end
             end
         end
 
-        is_zero(flow) && continue                      # Flow cannot be augmented along path
+        is_zero(flow; atol = tolerance) && continue  # Flow cannot be augmented along path
 
         v = target
         u = bv
@@ -108,11 +111,13 @@ blocking_flow(
     source::Integer,                   # the source vertex
     target::Integer,                   # the target vertex
     capacity_matrix::AbstractMatrix,   # edge flow capacities
-    flow_matrix::AbstractMatrix,       # the current flow matrix
-    ) = blocking_flow!(
+    flow_matrix::AbstractMatrix{T};       # the current flow matrix
+    tolerance = (T <: AbstractFloat) ? sqrt(eps(T)) : zero(T)
+    ) where {T}= blocking_flow!(
             residual_graph,
             source,
             target,
             capacity_matrix,
             flow_matrix,
-            zeros(Int, Graphs.nv(residual_graph)))
+            zeros(Int, Graphs.nv(residual_graph)); 
+            tolerance = tolerance)
