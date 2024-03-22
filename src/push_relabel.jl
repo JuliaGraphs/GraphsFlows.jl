@@ -12,7 +12,8 @@ function push_relabel end
         residual_graph::::Graphs.IsDirected,       # the input graph
         source::Integer,                       # the source vertex
         target::Integer,                       # the target vertex
-        capacity_matrix::AbstractMatrix{T}     # edge flow capacities
+        capacity_matrix::AbstractMatrix{T};     # edge flow capacities
+        tolerance::T = (T <: AbstractFloat) ? sqrt(eps(T)) : zero(T)
     ) where {T}
 
     n = Graphs.nv(residual_graph)
@@ -43,7 +44,7 @@ function push_relabel end
     while length(Q) > 0
         v = pop!(Q)
         active[v] = false
-        discharge!(residual_graph, v, capacity_matrix, flow_matrix, excess, height, active, count, Q)
+        discharge!(residual_graph, v, capacity_matrix, flow_matrix, excess, height, active, count, Q; tolerance = tolerance)
     end
 
     return sum([flow_matrix[v, target] for v in Graphs.inneighbors(residual_graph, target)]), flow_matrix
@@ -180,20 +181,21 @@ function discharge! end
 @traitfn function discharge!(
         residual_graph::::Graphs.IsDirected,    # the input graph
         v::Integer,                         # vertex to be discharged
-        capacity_matrix::AbstractMatrix,
+        capacity_matrix::AbstractMatrix{T},
         flow_matrix::AbstractMatrix,
         excess::AbstractVector,
         height::AbstractVector{Int},
         active::AbstractVector{Bool},
         count::AbstractVector{Int},
-        Q::AbstractVector                   # FIFO queue
-    )
+        Q::AbstractVector;                   # FIFO queue
+        tolerance = (T <: AbstractFloat) ? sqrt(eps(T)) : zero(T)
+    ) where {T}
     for to in Graphs.outneighbors(residual_graph, v)
-        excess[v] == 0 && break
+        is_zero(excess[v]; atol = tolerance) && break
         push_flow!(residual_graph, v, to, capacity_matrix, flow_matrix, excess, height, active, Q)
     end
 
-    if excess[v] > 0
+    if ! is_zero(excess[v]; atol = tolerance)
         if count[height[v] + 1] == 1
             gap!(residual_graph, height[v], excess, height, active, count, Q)
         else

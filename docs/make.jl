@@ -12,6 +12,7 @@ makedocs(
         "Multiroute flows"   => "multiroute.md",
         "Min-cost flows"     => "mincost.md",
         "Min-cut"            => "mincut.md",
+        "Internals"          => "internals.md",
     ]
 )
 

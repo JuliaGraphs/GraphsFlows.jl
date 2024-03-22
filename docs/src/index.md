@@ -1,4 +1,4 @@
- # GraphsFlows.jl: flow algorithms for Graphs.jl
+# GraphsFlows.jl: flow algorithms for Graphs.jl
 
 ```@meta
 CurrentModule = GraphsFlows
@@ -6,12 +6,6 @@ DocTestSetup = quote
     using GraphsFlows
     import Graphs
 end
-```
-
-```@autodocs
-Modules = [GraphsFlows]
-Pages = ["GraphsFlows.jl"]
-Order = [:function, :type]
 ```
 
 This is the documentation page for `GraphsFlows`. In all pages, we assume
