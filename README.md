@@ -1,7 +1,7 @@
 # GraphsFlows
 
 [![CI](https://github.com/JuliaGraphs/GraphsFlows.jl/actions/workflows/ci.yml/badge.svg)](https://github.com/JuliaGraphs/GraphsFlows.jl/actions/workflows/ci.yml)
-[![codecov.io](http://codecov.io/github/JuliaGraphs/GraphsFlows.jl/coverage.svg?branch=master)](http://codecov.io/github/JuliaGraphs/GraphsFlows.jl?branch=master)
+[![codecov](https://codecov.io/github/JuliaGraphs/GraphsFlows.jl/branch/master/graph/badge.svg?token=O8REyWf05M)](https://codecov.io/github/JuliaGraphs/GraphsFlows.jl)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliagraphs.org/GraphsFlows.jl/dev/)
 
 Flow algorithms on top of [Graphs.jl](https://github.com/JuliaGraphs/Graphs.jl),
